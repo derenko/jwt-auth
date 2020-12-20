@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    restart: always
+    env_file: .env
+    ports:
+      - "3000:3000"
+    links:
+      - database
+  database:
+    image: mongo
+    container_name: database
+    restart: always
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    volumes:
+      - ./src/database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  nginx:
+    restart: always
+    container_name: nginx-reverse-proxy
+    build:
+      context: ./nginx
+    links:
+      - api
+    ports:
+      - "80:80"
