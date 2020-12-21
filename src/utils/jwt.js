@@ -1,25 +1,8 @@
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
+const { v4: uuid } = require("uuid");
 
-const jwtSign = (payload) => {
-  try {
-    const token = jwt.sign({ ...payload }, SECRET, { expiresIn: "15m" });
-
-    return token;
-  } catch (e) {
-    throw e;
-  }
-};
-
-const jwtGenerateRefreshToken = (payload) => {
-  try {
-    const token = jwt.sign({ ...payload }, SECRET, { expiresIn: "7d" });
-
-    return token;
-  } catch (e) {
-    throw e;
-  }
-};
+const refreshTokenService = require("../services/refreshToken.service");
 
 const jwtVerify = (token) => {
   try {
@@ -30,8 +13,27 @@ const jwtVerify = (token) => {
   }
 };
 
+const issueTokenPair = async (userId) => {
+  try {
+    const accessToken = jwt.sign({ userId }, SECRET, { expiresIn: "15m" });
+
+    const refreshToken = uuid();
+
+    await refreshTokenService.create({
+      token: refreshToken,
+      userId,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  } catch (e) {
+    throw error;
+  }
+};
+
 module.exports = {
-  jwtSign,
   jwtVerify,
-  jwtGenerateRefreshToken,
+  issueTokenPair,
 };

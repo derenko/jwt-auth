@@ -6,9 +6,13 @@ const {
   MONGO_INITDB_ROOT_PASSWORD,
 } = process.env;
 
-const MONGO_URI = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@database:27017/${MONGO_INITDB_DATABASE}`;
+let MONGO_URI;
 
-console.log(MONGO_URI);
+if (process.env.NODE_ENV === "dev") {
+  MONGO_URI = `mongodb://localhost:27017/${MONGO_INITDB_DATABASE}`;
+} else {
+  MONGO_URI = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@database:27017/${MONGO_INITDB_DATABASE}`;
+}
 
 const connect = async () => {
   try {

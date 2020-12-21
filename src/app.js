@@ -1,25 +1,26 @@
 const express = require("express");
 const app = express();
-
-const bodyParser = require("body-parser");
 const authMiddleware = require("./middlewares/auth.middleware");
+const authModule = require("./modules/auth/auth");
 
-const authRouter = require("./routes/auth.router");
+const createApp = () => {
+  app.use("/api/auth", authModule);
 
-app.use(bodyParser.json());
+  app.use(authMiddleware);
 
-app.use("/api", authRouter);
-
-app.get("/api/protected", authMiddleware, (req, res) => {
-  res.json({
-    ...req.user,
+  app.get("/api/protected", (req, res) => {
+    res.json({
+      ...req.user,
+    });
   });
-});
 
-app.use((error, req, res, next) => {
-  const status = error.status || 500;
-  console.error(error);
-  return res.status(status).json({ error: error.toString() });
-});
+  app.use((error, req, res, next) => {
+    const status = error.status || 500;
+    console.error(error);
+    return res.status(status).json({ error: error.toString() });
+  });
 
-module.exports = app;
+  return app;
+};
+
+module.exports = createApp;
