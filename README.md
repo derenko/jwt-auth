@@ -1,7 +1,7 @@
-# Express.js auth template using JWT
+- Express.js auth template using JWT
 
-# MongoDB Database
+- MongoDB Database
 
-# Nginx as reverse proxy
+- Nginx as reverse proxy
 
-# All in Docker containers
+- Dockerized
