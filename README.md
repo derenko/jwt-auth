@@ -1,6 +1,8 @@
-- JWT
+- Express
 
-- MongoDB Database
+- Mongo
+
+- JWT
 
 - Nginx as reverse proxy
 
