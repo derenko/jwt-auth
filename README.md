@@ -1,4 +1,4 @@
-- Express.js auth template using JWT
+- JWT
 
 - MongoDB Database
 
